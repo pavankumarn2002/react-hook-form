@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
@@ -5,7 +6,9 @@ import './App.css'
 const App = () => {
   const [employees, setEmployees] = useState([]);
   const [editingEmployee, setEditingEmployee] = useState(null);
-  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
+
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
       name: '',
@@ -17,9 +20,19 @@ const App = () => {
     mode: 'onTouched'
   });
 
+  // Form handling for login
+  const { register: registerLogin, handleSubmit: handleSubmitLogin, formState: { errors: loginErrors } } = useForm({
+    defaultValues: {
+      username: '',
+      password: ''
+    }
+  });
+
   useEffect(() => {
-    fetchEmployees();
-  }, []);
+    if (isLoggedIn) {
+      fetchEmployees();
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (editingEmployee) {
@@ -45,12 +58,21 @@ const App = () => {
     fetchEmployees();
   };
 
+  // const updateEmployee = async (employee) => {
+  //   await axios.put(`http://localhost:5000/employees/${employee.id}`, employee);
+  //   fetchEmployees();
+  //   setEditingEmployee(null);
+  // };
   const updateEmployee = async (employee) => {
-    await axios.put(`http://localhost:5000/employees/${employee.id}`, employee);
-    fetchEmployees();
-    setEditingEmployee(null);
+    const { id, ...employeeData } = employee;
+    try {
+      await axios.put(`http://localhost:5000/employees/${id}`, employeeData);
+      fetchEmployees();
+      setEditingEmployee(null);
+    } catch (error) {
+      console.error('Update error', error);
+    }
   };
-
   const deleteEmployee = async (id) => {
     await axios.delete(`http://localhost:5000/employees/${id}`);
     fetchEmployees();
@@ -64,13 +86,62 @@ const App = () => {
     }
   };
 
+  const handleLogin = async (data) => {
+    try {
+      const response = await axios.get('http://localhost:5000/users');
+      const user = response.data.find(user => user.username === data.username && user.password === data.password);
+
+      if (user) {
+        setIsLoggedIn(true);
+        setShowLogin(false);
+      } else {
+        alert('Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Login error', error);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setShowLogin(true);
+  };
+
+  if (showLogin) {
+    return (
+      <div className="login-page">
+        <h1>Login</h1>
+        <form onSubmit={handleSubmitLogin(handleLogin)}>
+          <div>
+            <label>Username</label>
+            <input className="input"
+              {...registerLogin('username', { required: 'Username is required' })}
+            />
+            {loginErrors.username && <p>{loginErrors.username.message}</p>}
+          </div>
+          <div>
+            <label>Password</label>
+            <input className="input"
+              type="password"
+              {...registerLogin('password', { required: 'Password is required' })}
+            />
+            {loginErrors.password && <p>{loginErrors.password.message}</p>}
+          </div>
+          <button className="login-btn" type="submit">Login</button>
+        </form>
+      </div>
+    );
+  }
+
   return (
+    <div className="main">
+      <button className="logout-btn"onClick={handleLogout}>Logout</button>
     <div className='container'>
       <h1>Employee CRUD</h1>
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <div>
+      <form className="form" onSubmit={handleSubmit(handleFormSubmit)}>
+        <div className="col">
           <label>Name</label>
-          <input
+          <input className="input"
             {...register('name', {
               required: 'Name is required',
               pattern: {
@@ -89,9 +160,9 @@ const App = () => {
           />
           {errors.name && <p className="error-message">{errors.name.message}</p>}
         </div>
-        <div>
+        <div className="col">
           <label>Email</label>
-          <input
+          <input className="input"
             type="email"
             {...register('email', {
               required: 'Email is required',
@@ -103,9 +174,9 @@ const App = () => {
           />
           {errors.email && <p className="error-message">{errors.email.message}</p>}
         </div>
-        <div>
+        <div className="col">
           <label>Position</label>
-          <select {...register('position', { required: 'Position is required' })}>
+          <select className="select" {...register('position', { required: 'Position is required' })}>
             <option value="">Select...</option>
             <option value="Developer">Developer</option>
             <option value="Designer">Designer</option>
@@ -113,7 +184,7 @@ const App = () => {
           </select>
           {errors.position && <p className="error-message">{errors.position.message}</p>}
         </div>
-        <div>
+        <div className="col">
           <label>Skills</label>
           <div>
             <input
@@ -140,7 +211,7 @@ const App = () => {
             CSS
           </div>
         </div>
-        <div>
+        <div className="col">
           <label>Employment Type</label>
           <div>
             <input
@@ -160,19 +231,37 @@ const App = () => {
           </div>
           {errors.employmentType && <p className="error-message">{errors.employmentType.message}</p>}
         </div>
+        <div className="col">
         <button type="submit">Submit</button>
+        </div>
       </form>
-      <ul>
+      <table className="table">
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Position</th>
+          <th>Skills</th>
+          <th>Employeement Type</th>
+          <th>Actions</th>
+        </tr>
         {employees.map((employee) => (
-          <li key={employee.id}>
-            {employee.name} - {employee.email} - {employee.position} - {(employee.skills || []).join(', ')} - {employee.employmentType}
-            <button onClick={() => setEditingEmployee(employee)}>Edit</button>
-            <button onClick={() => deleteEmployee(employee.id)}>Delete</button>
-          </li>
+        <tr key={employee.id}>
+          <td>{employee.name}</td>
+          <td>{employee.email}</td>
+          <td>{employee.position}</td>
+          <td>{(employee.skills || []).join(', ')}</td>
+          <td>{employee.employmentType}</td>
+          <td>
+          <button className="edit" onClick={() => setEditingEmployee(employee)}>Edit</button>
+          <button className="delete" onClick={() => deleteEmployee(employee.id)}>Delete</button>
+          </td>
+        </tr>
         ))}
-      </ul>
+      </table>
+    </div>
     </div>
   );
 };
 
 export default App;
+

@@ -1,7 +1,84 @@
-.container{
-  display:flex;
-  flex-direction: column;justify-content: center;align-items: center;
+.logout-btn {
+    margin-left: auto;
+    display: block;
+    background-color: rgb(241, 89, 89);
+    color: white;
+    border: 0px solid;
+    border-radius: 5px;
 }
-.error-message{
-  font-size: 12px;font-weight: bold; color:red
+.login-btn {
+    background-color: rgb(102, 102, 245);
+    color: white;
+    border: 0px solid;
+    border-radius: 5px;
+    margin: 3px;
+}
+.login-page{
+  display:flex;flex-direction: column;justify-content: center;align-items: center;
+}
+.login-page .input{
+  margin-bottom:25px
+}
+.main{
+  padding-bottom:75px
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 25px 0px 25px;
+}
+.error-message {
+    font-size: 12px;
+    font-weight: bold;
+    color: red;
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+td,
+th {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.col {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5px;
+}
+.col:nth-last-child(1) button {
+    width: 100px;
+    color: white;
+    background-color: rgb(92, 151, 92);
+    border: 1px solid;
+}
+.input,
+.select {
+    height: 35px;
+    border-radius: 7px;
+}
+button {
+    height: 35px;
+}
+.edit {
+    background-color: rgb(102, 102, 245);
+    color: white;
+    border: 0px solid;
+    border-radius: 5px;
+    margin: 3px;
+}
+.delete {
+    background-color: rgb(241, 89, 89);
+    color: white;
+    border: 0px solid;
+    border-radius: 5px;
+    margin: 3px;
 }

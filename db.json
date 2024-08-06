@@ -1,29 +1,44 @@
 {
-    "employees": [
-      {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john.doe@example.com",
-        "position": "Developer",
-        "skills": ["JavaScript", "React"],
-        "employmentType": "Full-time"
-      },
-      {
-        "id": 2,
-        "name": "Jane Smith",
-        "email": "jane.smith@example.com",
-        "position": "Designer",
-        "skills": ["CSS", "JavaScript"],
-        "employmentType": "Part-time"
-      },
-      {
-        "id": 3,
-        "name": "Alice Johnson",
-        "email": "alice.johnson@example.com",
-        "position": "Manager",
-        "skills": ["React"],
-        "employmentType": "Full-time"
-      }
-    ]
-  }
-  
+  "employees": [
+    {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "position": "Developer",
+      "skills": [
+        "JavaScript",
+        "React"
+      ],
+      "employmentType": "Full-time",
+      "id": "1"
+    },
+    {
+      "id": "3",
+      "name": "Alice Johnson",
+      "email": "alice.johnson@example.com",
+      "position": "Manager",
+      "skills": [
+        "React"
+      ],
+      "employmentType": "Full-time"
+    },
+    {
+      "id": "44b6",
+      "name": "Om",
+      "email": "om@accentiqa.com",
+      "position": "Developer",
+      "skills": [
+        "JavaScript",
+        "React",
+        "CSS"
+      ],
+      "employmentType": "Full-time"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "password123"
+    }
+  ]
+}
